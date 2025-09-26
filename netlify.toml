@@ -1,0 +1,70 @@
+[build]
+  # Build command for Netlify
+  command = "echo 'Build completed'"
+  
+  # Directory to publish
+  publish = "public"
+
+[build.environment]
+  # Node.js version
+  NODE_VERSION = "18"
+  
+  # Environment variables
+  NODE_ENV = "production"
+  
+  # Disable Netlify Blobs to avoid deployment errors
+  NETLIFY_BLOBS_DISABLED = "true"
+
+# Redirects for Next.js App Router
+[[redirects]]
+  from = "/api/*"
+  to = "/api/:splat"
+  status = 200
+
+# Handle client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Cache static assets
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache images
+[[headers]]
+  for = "*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+# Functions configuration
+[functions]
+  # Node.js functions
+  node_bundler = "esbuild"
+  
+# Edge functions (if needed)
+# [[edge_functions]]
+#   path = "/api/*"
+#   function = "api-handler"
